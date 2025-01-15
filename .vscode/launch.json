@@ -1,0 +1,26 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug wmaps_build_input_graph",
+            "program": "${workspaceFolder}/build/wmaps_build_input_graph",
+            "args": ["../../inputs/map.osm"],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "wmaps_build_input_graph",
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug wmaps",
+            "program": "${workspaceFolder}/build/wmaps",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "wmaps"
+        }
+    ]
+}
