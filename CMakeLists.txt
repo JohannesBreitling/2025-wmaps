@@ -6,5 +6,6 @@ add_executable(wmaps main.cpp)
 add_executable(wmaps_build_input_graph utils/build_input_graph/BuildInputGraph.cpp)
 
 # Add the pugixml library
-add_library(pugixml STATIC utils/pugixml/pugixml.cpp)
-target_link_libraries(wmaps pugixml)
+add_library(pugixml SHARED utils/pugixml/pugixml.cpp)
+target_link_libraries(wmaps_build_input_graph pugixml)
+install(TARGETS pugixml DESTINATION lib)

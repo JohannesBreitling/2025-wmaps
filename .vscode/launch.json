@@ -9,7 +9,7 @@
             "request": "launch",
             "name": "Debug wmaps_build_input_graph",
             "program": "${workspaceFolder}/build/wmaps_build_input_graph",
-            "args": ["../../inputs/map.osm"],
+            "args": ["${workspaceFolder}/inputs/map.osm"],
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "wmaps_build_input_graph",
         },
