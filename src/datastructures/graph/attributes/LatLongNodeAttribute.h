@@ -14,6 +14,17 @@ class LatLongNodeAttribute : public AbstractAttribute<std::tuple<float, float>> 
             return {INVALID_COORD, INVALID_COORD};
         }
 
+        std::string to_string(Type val) override {
+            std::string result = "(";
+
+            result += std::to_string(std::get<0>(val));
+            result += ", ";
+            result += std::to_string(std::get<0>(val));
+            result += ")";
+
+            return result;
+        }
+
         static constexpr const char* NAME = "lat_long";
 };
 

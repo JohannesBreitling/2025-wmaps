@@ -15,60 +15,19 @@
 namespace wmaps::graph {
 
 template<typename ...Attributes>
-struct NodeAttributeCollection : public Attributes... {
-    public: 
-};
+struct VertexAttributeCollection {};
 
 template<typename ...Attributes>
-struct EdgeAttributeCollection : public Attributes... {
+struct EdgeAttributeCollection {};
+
+template<typename VertexAttributes, typename EdgeAttributes>
+class Graph;
+
+template<typename ...VertexAttributes, typename ...EdgeAttributes>
+class Graph<VertexAttributeCollection<VertexAttributes...>, EdgeAttributeCollection<EdgeAttributes...>> : public VertexAttributes..., public EdgeAttributes... {
 
     public:
-        EdgeAttributeCollection(Attributes... attributes) {
-            (handleAttribute(attributes), ...);
-        }
-
-        template<typename Attribute>
-        void handleAttribute(Attribute attr) {
-            std::cout << attr.getName() << std::endl;
-            attr.reserve(10);
-        }
-
-        template<typename Attribute>
-        void setAttribute(const int idx, typename Attribute::Type val) {
-            // Attribute::values[idx] = val;
-            Attribute::reserve(20);
-            std::cout << "SET: " << Attribute::getName() << std::endl;
-            std::cout << "SIZE: " << Attribute::values.size() << std::endl;
-            std::cout << Attribute::values[0] << std::endl;
-        }
-
-        void reserve(const int numEdges) {
-            (Attributes::reserve(numEdges), ...);
-        }
-
-        template<typename Attribute>
-        void reserve(const int numEdges) {
-            Attribute::reserve(numEdges);
-        }
-
-        /*
-        template<typename Attribute>
-        void getAttribute(std::string name, typename Attribute::Type val) {
-            Attribute::values[name] = val;
-        }*/
-    
-};
-
-
-template<typename NodeAttributesT, typename EdgeAttributesT>
-class Graph : public NodeAttributesT, public EdgeAttributesT {
-
-    public:
-
-        
-        Graph() {
-
-        }
+        Graph() {}
 
         // Reserve memory for the graph
         void reserve(int numNodes, int numEdges) {
@@ -83,10 +42,9 @@ class Graph : public NodeAttributesT, public EdgeAttributesT {
             currNode = 0;
             insertedEdges = 0;
 
-            // TODO Reserve space for the attributes
-            // NodeAttributeCollection::reserve(numNodes);
-            
-            EdgeAttributesT::reserve(numEdges);
+            // Reserve space for the attributes
+            (VertexAttributes::reserve(numNodes), ...);
+            (EdgeAttributes::reserve(numEdges), ...);
         }
 
         // Methods to fill the graph with edges
@@ -131,6 +89,7 @@ class Graph : public NodeAttributesT, public EdgeAttributesT {
             }
         }
 
+        //* Utility methods to retrieve information about the graph
         // Method to retrieve the (out) degree of a node
         int degree(int node) {
             assert(node < numNodes);
@@ -154,17 +113,19 @@ class Graph : public NodeAttributesT, public EdgeAttributesT {
             return outEdges[node + 1] - 1;
         }
 
-        /*
-        template<typename AttributeT>
-        void setAttribute(int node, typename AttributeT::Type val) {
-            AttributeT::values[node] = val;
+        //* Utility methods to get / set the attributes of the graph
+        template<typename Attribute>
+        void setAttribute(int idx, typename Attribute::Type val) {
+            Attribute::values[idx] = val;
         }
 
-        template<typename AttributeT>
-        const typename AttributeT::Type getAttribute(int node) {
-            return AttributeT::values[node];
-        }*/
+        template<typename Attribute>
+        typename Attribute::Type getAttribute(int idx) {
+            return Attribute::values[idx];
+        }
 
+
+        //* Utility methods for I/O
         void print() {
             // Print the out edge array
             std::cout << "OutEdges [";
@@ -183,12 +144,12 @@ class Graph : public NodeAttributesT, public EdgeAttributesT {
                 delim = ", ";
             }
             std::cout << "]\n";
+
+            (VertexAttributes::print(), ...);
+            (EdgeAttributes::print(), ...);
         }
 
     private:
-        NodeAttributesT nodeAttributes;
-        EdgeAttributesT edgeAttributes;
-
         // The size of the graph
         int numNodes;
         int numEdges;

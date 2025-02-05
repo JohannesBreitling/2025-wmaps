@@ -18,7 +18,6 @@ namespace wmaps::graph::attributes {
             using Type = T;
 
             void reserve(int size) {
-                std::cout << "Reserve in attribute: " << getName() << std::endl; // TODO
                 values = std::vector<T>(size, defaultValue());
             }
 
@@ -26,12 +25,15 @@ namespace wmaps::graph::attributes {
         
         protected:
             virtual T defaultValue() = 0;
+            
             virtual std::string getName() = 0;
+            
+            virtual std::string to_string(T val) = 0;
 
             void print() {
                 std::cout << "Attribute: " << getName() << std::endl;
                 for (T val : values) {
-                    std::cout << val << ", ";
+                    std::cout << to_string(val) << ", ";
                 }
                 std::cout << std::endl;    
             }

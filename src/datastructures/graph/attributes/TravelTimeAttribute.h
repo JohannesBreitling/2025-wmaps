@@ -14,6 +14,10 @@ class TravelTimeAttribute : public AbstractAttribute<int> {
             return INVALID_TIME;
         }
 
+        std::string to_string(Type val) override {
+            return std::to_string(val);
+        }
+
         static constexpr const char* NAME = "travel_time";
 };
 

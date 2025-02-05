@@ -13,6 +13,10 @@ class EdgeIdAttribute : public AbstractAttribute<int> {
             return INVALID_ID;
         }
 
+        std::string to_string(Type val) override {
+            return std::to_string(val);
+        }
+
         static constexpr const char* NAME = "edge_id";
 };
 

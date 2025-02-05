@@ -19,27 +19,16 @@ int main(int, char**){
     std::cout << "- - - - - - - - - - - - - - - - -\n";
     std::cout << "-           W M A P S           -\n";
     std::cout << "- - - - - - - - - - - - - - - - -\n";
-    std::cout << "-                               -\n";
+    std::cout << "-         R O U T I N G         -\n";
     std::cout << "- - - - - - - - - - - - - - - - -\n";
 
     // Construct a test Graph
     using namespace wmaps::graph;
 
-    
-    attributes::OSMNodeIdAttribute osmNodeIdAttribute;
-    attributes::LatLongNodeAttribute latLongNodeAttribute;
-    
-    using NodeAttributes =  NodeAttributeCollection<attributes::OSMNodeIdAttribute, attributes::LatLongNodeAttribute>;
-    // using EdgeAttributes = EdgeAttributeCollection<attributes::EdgeIdAttribute, attributes::TravelTimeAttribute>;
+    using VertexAttributes = VertexAttributeCollection<attributes::OSMNodeIdAttribute, attributes::LatLongNodeAttribute>;
+    using EdgeAttributes = EdgeAttributeCollection<attributes::EdgeIdAttribute, attributes::TravelTimeAttribute>;
 
-
-    attributes::EdgeIdAttribute edgeIdAttribute;
-    attributes::TravelTimeAttribute travelTimeAttribute;
-    EdgeAttributeCollection edgeAttributes = EdgeAttributeCollection(edgeIdAttribute, travelTimeAttribute);
-    edgeAttributes.setAttribute<attributes::TravelTimeAttribute>(0, 1);
-
-    /*
-    auto graph = Graph<NodeAttributes, EdgeAttributeCollection>();
+    auto graph = Graph<VertexAttributes, EdgeAttributes>();
     graph.reserve(8, 10);
 
     graph.insertEdge(0, 6);
@@ -52,7 +41,11 @@ int main(int, char**){
     graph.insertEdge(5, 7);
     graph.insertEdge(6, 1);
     graph.insertEdge(6, 7);
-*/
+
+    graph.setAttribute<attributes::OSMNodeIdAttribute>(0, 0);
+
+    graph.print();
+   
     // graph.setAttribute<attributes::OSMNodeIdAttribute>(2, 2);
 
     //graph.setAttribute<attributes::OSMNodeIdAttribute>(2, std::tuple<float, float>(10.15, 12.55));

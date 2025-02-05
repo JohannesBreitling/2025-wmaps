@@ -14,6 +14,10 @@ class DistanceAttribute : public AbstractAttribute<float> {
             return INVALID_DISTANCE;
         }
 
+        std::string to_string(Type val) override {
+            return std::to_string(val);
+        }
+
         static constexpr const char* NAME = "distance";
 };
 }
