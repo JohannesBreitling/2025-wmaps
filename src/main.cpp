@@ -9,7 +9,7 @@
 
 #include "datastructures/graph/Graph.h"
 #include "datastructures/graph/attributes/EdgeIdAttribute.h"
-#include "datastructures/graph/attributes/VertexIdAttribute.h"
+#include "datastructures/graph/attributes/OSMNodeIdAttribute.h"
 #include "datastructures/graph/attributes/DistanceAttribute.h"
 #include "datastructures/graph/attributes/TravelTimeAttribute.h"
 #include "datastructures/graph/attributes/LatLongNodeAttribute.h"
@@ -25,10 +25,21 @@ int main(int, char**){
     // Construct a test Graph
     using namespace wmaps::graph;
 
-    using NodeAttributes =  NodeAttributeCollection<attributes::VertexIdAttribute, attributes::LatLongNodeAttribute>;
-    using EdgeAttributes = EdgeAttributeCollection<attributes::EdgeIdAttribute, attributes::TravelTimeAttribute, attributes::DistanceAttribute>;
+    
+    attributes::OSMNodeIdAttribute osmNodeIdAttribute;
+    attributes::LatLongNodeAttribute latLongNodeAttribute;
+    
+    using NodeAttributes =  NodeAttributeCollection<attributes::OSMNodeIdAttribute, attributes::LatLongNodeAttribute>;
+    // using EdgeAttributes = EdgeAttributeCollection<attributes::EdgeIdAttribute, attributes::TravelTimeAttribute>;
 
-    auto graph = Graph<NodeAttributes, EdgeAttributes>();
+
+    attributes::EdgeIdAttribute edgeIdAttribute;
+    attributes::TravelTimeAttribute travelTimeAttribute;
+    EdgeAttributeCollection edgeAttributes = EdgeAttributeCollection(edgeIdAttribute, travelTimeAttribute);
+    edgeAttributes.setAttribute<attributes::TravelTimeAttribute>(0, 1);
+
+    /*
+    auto graph = Graph<NodeAttributes, EdgeAttributeCollection>();
     graph.reserve(8, 10);
 
     graph.insertEdge(0, 6);
@@ -41,6 +52,11 @@ int main(int, char**){
     graph.insertEdge(5, 7);
     graph.insertEdge(6, 1);
     graph.insertEdge(6, 7);
-    
-    graph.print();
+*/
+    // graph.setAttribute<attributes::OSMNodeIdAttribute>(2, 2);
+
+    //graph.setAttribute<attributes::OSMNodeIdAttribute>(2, std::tuple<float, float>(10.15, 12.55));
+    //std::cout << graph.getAttribute<attributes::OSMNodeIdAttribute>(2) << std::endl;
+
+    //graph.print();
 }

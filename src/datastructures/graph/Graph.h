@@ -15,27 +15,65 @@
 namespace wmaps::graph {
 
 template<typename ...Attributes>
-struct NodeAttributeCollection {};
+struct NodeAttributeCollection : public Attributes... {
+    public: 
+};
 
 template<typename ...Attributes>
-struct EdgeAttributeCollection {};
-
-template <typename EdgeAttributeCollectionT, typename NodeAttribtueCollectionT>
-class Graph {
+struct EdgeAttributeCollection : public Attributes... {
 
     public:
+        EdgeAttributeCollection(Attributes... attributes) {
+            (handleAttribute(attributes), ...);
+        }
+
+        template<typename Attribute>
+        void handleAttribute(Attribute attr) {
+            std::cout << attr.getName() << std::endl;
+            attr.reserve(10);
+        }
+
+        template<typename Attribute>
+        void setAttribute(const int idx, typename Attribute::Type val) {
+            // Attribute::values[idx] = val;
+            Attribute::reserve(20);
+            std::cout << "SET: " << Attribute::getName() << std::endl;
+            std::cout << "SIZE: " << Attribute::values.size() << std::endl;
+            std::cout << Attribute::values[0] << std::endl;
+        }
+
+        void reserve(const int numEdges) {
+            (Attributes::reserve(numEdges), ...);
+        }
+
+        template<typename Attribute>
+        void reserve(const int numEdges) {
+            Attribute::reserve(numEdges);
+        }
+
+        /*
+        template<typename Attribute>
+        void getAttribute(std::string name, typename Attribute::Type val) {
+            Attribute::values[name] = val;
+        }*/
+    
+};
+
+
+template<typename NodeAttributesT, typename EdgeAttributesT>
+class Graph : public NodeAttributesT, public EdgeAttributesT {
+
+    public:
+
         
         Graph() {
-            
+
         }
 
         // Reserve memory for the graph
         void reserve(int numNodes, int numEdges) {
             this->numNodes = numNodes;
             this->numEdges = numEdges;
-            outEdges.reserve(numNodes + 1);
-            edgeHeads.reserve(numEdges);
-            edgeTails.reserve(numEdges);
 
             outEdges = std::vector<int>(numNodes + 1, INVALID_INDEX);
             edgeHeads = std::vector<int>(numEdges, INVALID_EDGE);
@@ -44,12 +82,17 @@ class Graph {
             outEdges[0] = 0;
             currNode = 0;
             insertedEdges = 0;
+
+            // TODO Reserve space for the attributes
+            // NodeAttributeCollection::reserve(numNodes);
+            
+            EdgeAttributesT::reserve(numEdges);
         }
 
         // Methods to fill the graph with edges
         // Returns the idx of the edge in the graph
         // We restrict the construction of the graph such that the edges are added in order of the tail node
-        int insertEdge(int from, int to) {
+        void insertEdge(int from, int to) {
             if (numEdges == insertedEdges)
                 throw std::invalid_argument("Graph building is finished, no more edges can be added");
             
@@ -111,6 +154,17 @@ class Graph {
             return outEdges[node + 1] - 1;
         }
 
+        /*
+        template<typename AttributeT>
+        void setAttribute(int node, typename AttributeT::Type val) {
+            AttributeT::values[node] = val;
+        }
+
+        template<typename AttributeT>
+        const typename AttributeT::Type getAttribute(int node) {
+            return AttributeT::values[node];
+        }*/
+
         void print() {
             // Print the out edge array
             std::cout << "OutEdges [";
@@ -132,8 +186,8 @@ class Graph {
         }
 
     private:
-        NodeAttribtueCollectionT nodeAttributes;
-        EdgeAttributeCollectionT edgeAttributes;
+        NodeAttributesT nodeAttributes;
+        EdgeAttributesT edgeAttributes;
 
         // The size of the graph
         int numNodes;

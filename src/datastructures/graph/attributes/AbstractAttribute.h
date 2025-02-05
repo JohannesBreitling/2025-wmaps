@@ -15,15 +15,26 @@ namespace wmaps::graph::attributes {
     class AbstractAttribute {
     
         public:
+            using Type = T;
+
+            void reserve(int size) {
+                std::cout << "Reserve in attribute: " << getName() << std::endl; // TODO
+                values = std::vector<T>(size, defaultValue());
+            }
+
+            std::vector<T> values;
         
         protected:
-        
-            void reserve(int size) {
-                values.reserve(size);
-            }
-            
-            std::vector<T> values;
+            virtual T defaultValue() = 0;
+            virtual std::string getName() = 0;
 
+            void print() {
+                std::cout << "Attribute: " << getName() << std::endl;
+                for (T val : values) {
+                    std::cout << val << ", ";
+                }
+                std::cout << std::endl;    
+            }
     };
 
 }
